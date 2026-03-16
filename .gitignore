@@ -24,6 +24,7 @@ chrome-win64/
 
 # Generated artifacts
 artifacts/
+.launcher/
 
 # Local captured pages and sample dumps
 *_dados_estruturados.json

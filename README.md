@@ -45,6 +45,33 @@ python main.py
 http://127.0.0.1:8000
 ```
 
+## Inicializacao automatica no Windows
+
+Se quiser abrir com duplo clique, use:
+
+```text
+start_marketplace.bat
+```
+
+Esse launcher:
+
+- cria a pasta `.venv` automaticamente se ela nao existir
+- atualiza o `pip` na primeira execucao
+- instala ou atualiza as dependencias de `requirements.txt` quando necessario
+- inicia a aplicacao em seguida
+
+Opcionalmente voce tambem pode rodar:
+
+```bash
+python launcher.py
+```
+
+Ou apenas preparar o ambiente sem abrir a API:
+
+```bash
+python launcher.py --bootstrap-only
+```
+
 ## Interface
 
 Ao abrir a pagina inicial voce pode:
