@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+.venv314/
+
+# Local editor / OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Runtime logs
+server.out
+server.err
+*.log
+
+# Browser state and local binaries
+.selenium-profiles/
+chrome-win64/
+
+# Generated artifacts
+artifacts/
+
+# Local captured pages and sample dumps
+*_dados_estruturados.json
+*_preciso.json
+*_resultados.json
+*_mercadolivre.html
+*_olx_legivel.html
+*_olx_results.html
+*_html_legivel.html
+olx_sample.html
+sample_metadata.json
+sample_structured_data.json
+
+# Optional local env files
+.env
+.env.*

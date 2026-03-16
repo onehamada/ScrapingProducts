@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketplace Search</title>
+  <style>
+    :root {
+      --bg: #f6f1e8;
+      --panel: rgba(255, 250, 243, 0.9);
+      --panel-strong: #fffaf2;
+      --text: #1f2225;
+      --muted: #5a6672;
+      --line: rgba(31, 34, 37, 0.12);
+      --accent: #b7571a;
+      --accent-2: #136f63;
+      --shadow: 0 18px 50px rgba(72, 58, 38, 0.12);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI Variable", "Bahnschrift", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(183, 87, 26, 0.16), transparent 28%),
+        radial-gradient(circle at right, rgba(19, 111, 99, 0.14), transparent 24%),
+        linear-gradient(180deg, #f7f0e4 0%, #efe5d4 100%);
+    }
+
+    .shell {
+      width: min(1180px, calc(100vw - 32px));
+      margin: 28px auto 48px;
+    }
+
+    .hero,
+    .results,
+    .platform {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero {
+      padding: 28px;
+      display: grid;
+      gap: 22px;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: start;
+      flex-wrap: wrap;
+    }
+
+    .eyebrow {
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-size: 12px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 3.8rem);
+      line-height: 0.95;
+      max-width: 11ch;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      max-width: 62ch;
+      line-height: 1.55;
+    }
+
+    .note-box {
+      min-width: 260px;
+      max-width: 340px;
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(31, 34, 37, 0.08);
+    }
+
+    .note-box strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    form {
+      display: grid;
+      gap: 18px;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1.55fr 0.7fr 0.75fr;
+      gap: 14px;
+    }
+
+    .field,
+    .options,
+    .results {
+      padding: 20px;
+    }
+
+    .field {
+      background: var(--panel-strong);
+      border-radius: 18px;
+      border: 1px solid rgba(31, 34, 37, 0.08);
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      border: 0;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 1.05rem;
+      font-family: inherit;
+    }
+
+    .options {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      background: rgba(255, 255, 255, 0.66);
+      border-radius: 18px;
+      border: 1px solid rgba(31, 34, 37, 0.08);
+    }
+
+    .toggle {
+      display: flex;
+      gap: 10px;
+      align-items: start;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(246, 241, 232, 0.9);
+      border: 1px solid rgba(31, 34, 37, 0.08);
+    }
+
+    .toggle small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .actions {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 22px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 700;
+      color: white;
+      background: linear-gradient(135deg, var(--accent), #d36b2c);
+      box-shadow: 0 10px 24px rgba(183, 87, 26, 0.22);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .subtle {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .results {
+      margin-top: 22px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .status-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .summary {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .summary-pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(19, 111, 99, 0.12);
+      color: var(--accent-2);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .platforms {
+      display: grid;
+      gap: 18px;
+    }
+
+    .platform {
+      padding: 20px;
+    }
+
+    .platform-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .platform h2 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    .platform-meta {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+
+    .snapshot-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 14px 0 18px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin: 0 0 18px;
+    }
+
+    .stat-card {
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(246, 241, 232, 0.88);
+      border: 1px solid rgba(31, 34, 37, 0.08);
+    }
+
+    .stat-label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 1.02rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .snapshot-links a,
+    .item a.link {
+      color: var(--accent-2);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .item {
+      border-radius: 18px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(31, 34, 37, 0.08);
+      display: grid;
+      gap: 10px;
+    }
+
+    .item-title {
+      margin: 0;
+      font-size: 1.02rem;
+      line-height: 1.35;
+    }
+
+    .price {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .meta-row {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.45;
+    }
+
+    .raw {
+      color: #70777f;
+      font-size: 0.88rem;
+      line-height: 1.45;
+      border-top: 1px solid rgba(31, 34, 37, 0.08);
+      padding-top: 10px;
+    }
+
+    .empty {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px dashed rgba(31, 34, 37, 0.18);
+      color: var(--muted);
+    }
+
+    @media (max-width: 780px) {
+      .field-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .options {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <div class="hero-top">
+        <div>
+          <div class="eyebrow">Marketplace Search</div>
+          <h1>Pesquise um produto e veja os anuncios.</h1>
+          <p class="lead">
+            Digite o que voce quer buscar, escolha os marketplaces e rode a captura.
+            O navegador pode abrir durante a execucao para evitar bloqueios dos sites.
+          </p>
+        </div>
+        <aside class="note-box">
+          <strong>Como esta configurado</strong>
+          <div class="subtle">
+            OLX, Mercado Livre, KaBuM e Terabyte estao integrados. A API faz cache curto, busca paralela e tenta variacoes
+            automaticas da consulta quando a primeira tentativa vem fraca. Os HTMLs e JSONs ficam salvos em <code>/artifacts</code>.
+          </div>
+        </aside>
+      </div>
+
+      <form id="search-form">
+        <div class="field-grid">
+          <div class="field">
+            <label for="query">O que voce quer pesquisar?</label>
+            <input id="query" name="query" type="text" placeholder="Ex.: gtx 1060, iphone 13, mesa gamer" required>
+          </div>
+          <div class="field">
+            <label for="max-results">Maximo de resultados</label>
+            <input id="max-results" name="max-results" type="number" min="1" max="30" value="8">
+          </div>
+          <div class="field">
+            <label for="category">Categoria</label>
+            <select id="category" name="category">
+              <option value="auto" selected>Auto</option>
+                <option value="placa-de-video">Placa de video</option>
+                <option value="notebook">Notebook</option>
+                <option value="pc-completo">PC completo</option>
+                <option value="processador">Processador</option>
+              </select>
+            </div>
+        </div>
+
+        <div class="options">
+          <label class="toggle">
+            <input type="checkbox" name="platform" value="olx" checked>
+            <span>
+              <strong>OLX</strong>
+              <small>Busca anuncios com titulo, preco, local, data e link.</small>
+            </span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" name="platform" value="mercadolivre" checked>
+            <span>
+              <strong>Mercado Livre</strong>
+              <small>Busca produtos com preco atual, parcelamento e link.</small>
+            </span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" name="platform" value="facebook">
+            <span>
+              <strong>Facebook beta</strong>
+              <small>So funciona se o perfil usado pelo Selenium ja estiver logado.</small>
+            </span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" name="platform" value="kabum">
+            <span>
+              <strong>KaBuM</strong>
+              <small>Busca produtos da loja com preco, parcelamento e link direto.</small>
+            </span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" name="platform" value="terabyte">
+            <span>
+              <strong>Terabyte</strong>
+              <small>Busca hardware e componentes pela vitrine da TerabyteShop.</small>
+            </span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="headless" name="headless">
+            <span>
+              <strong>Modo invisivel</strong>
+              <small>Mais rapido, mas costuma ser menos confiavel nesses marketplaces.</small>
+            </span>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button id="submit-button" type="submit">Pesquisar agora</button>
+          <div class="subtle">
+            Rotas uteis: <a href="/docs" target="_blank">/docs</a> e <a href="/api/info" target="_blank">/api/info</a>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <section class="results" id="results">
+      <div class="status-line">
+        <strong>Pronto para buscar.</strong>
+        <span class="subtle">Nenhuma consulta executada ainda.</span>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const form = document.getElementById("search-form");
+    const results = document.getElementById("results");
+    const submitButton = document.getElementById("submit-button");
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+
+    function formatCurrency(value) {
+      if (value === null || value === undefined || value === "") {
+        return "--";
+      }
+
+      return new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+      }).format(Number(value));
+    }
+
+    function formatMilliseconds(value) {
+      if (value === null || value === undefined || value === "") {
+        return "--";
+      }
+
+      return `${Number(value).toFixed(0)} ms`;
+    }
+
+    function statsTemplate(stats) {
+      if (!stats) {
+        return "";
+      }
+
+      return `
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-label">Media filtrada</span>
+            <div class="stat-value">${formatCurrency(stats.average_price)}</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Mediana</span>
+            <div class="stat-value">${formatCurrency(stats.median_price)}</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Faixa automatica</span>
+            <div class="stat-value">${formatCurrency(stats.automatic_min_price)} - ${formatCurrency(stats.automatic_max_price)}</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Precos usados</span>
+            <div class="stat-value">${escapeHtml(stats.considered_items ?? 0)} / ${escapeHtml(stats.priced_items ?? 0)}</div>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Titulos aprovados</span>
+            <div class="stat-value">${escapeHtml(stats.matched_items ?? 0)} / ${escapeHtml(stats.scanned_items ?? 0)}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function cardTemplate(item) {
+      return `
+        <article class="item">
+          <h3 class="item-title">${escapeHtml(item.title || "Sem titulo")}</h3>
+          <div class="price">${escapeHtml(item.price || "Preco nao informado")}</div>
+          ${item.location ? `<div class="meta-row"><strong>Local:</strong> ${escapeHtml(item.location)}</div>` : ""}
+          ${item.posted_at ? `<div class="meta-row"><strong>Data:</strong> ${escapeHtml(item.posted_at)}</div>` : ""}
+          ${item.installment ? `<div class="meta-row"><strong>Parcelamento:</strong> ${escapeHtml(item.installment)}</div>` : ""}
+          ${item.shipping ? `<div class="meta-row"><strong>Entrega:</strong> ${escapeHtml(item.shipping)}</div>` : ""}
+          ${item.url ? `<a class="link" href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">Abrir anuncio</a>` : ""}
+          ${item.raw_text ? `<div class="raw">${escapeHtml(item.raw_text)}</div>` : ""}
+        </article>
+      `;
+    }
+
+    function platformTemplate(platform, result) {
+      const status = result.success
+        ? `<span class="summary-pill">${result.count} itens</span>`
+        : `<span class="summary-pill">falhou</span>`;
+
+      const message = result.error || result.note || "";
+      const searchTerms = Array.isArray(result.search_terms_used) && result.search_terms_used.length
+        ? result.search_terms_used.join(", ")
+        : "";
+      const cards = result.items?.length
+        ? `<div class="cards">${result.items.map(cardTemplate).join("")}</div>`
+        : `<div class="empty">Nenhum item renderizado para esta plataforma.</div>`;
+
+      return `
+        <section class="platform">
+          <div class="platform-head">
+            <h2>${escapeHtml(platform)}</h2>
+            ${status}
+          </div>
+          <div class="platform-meta">
+            <div><strong>Busca:</strong> ${escapeHtml(result.search_url || "")}</div>
+            <div><strong>Categoria aplicada:</strong> ${escapeHtml(result.category || "auto")}</div>
+            <div><strong>Titulo da pagina:</strong> ${escapeHtml(result.page_title || "Sem titulo")}</div>
+            <div><strong>Tempo:</strong> ${escapeHtml(formatMilliseconds(result.elapsed_ms))}${result.cache_hit ? ` | cache ${escapeHtml(result.cached_age_seconds || 0)}s` : ""}</div>
+            ${searchTerms ? `<div><strong>Variacoes usadas:</strong> ${escapeHtml(searchTerms)}</div>` : ""}
+            ${message ? `<div><strong>Observacao:</strong> ${escapeHtml(message)}</div>` : ""}
+          </div>
+          <div class="snapshot-links">
+            ${result.html_snapshot ? `<a href="${escapeHtml(result.html_snapshot)}" target="_blank" rel="noopener noreferrer">Abrir HTML capturado</a>` : ""}
+            ${result.json_snapshot ? `<a href="${escapeHtml(result.json_snapshot)}" target="_blank" rel="noopener noreferrer">Abrir JSON desta plataforma</a>` : ""}
+          </div>
+          ${statsTemplate(result.stats)}
+          ${cards}
+        </section>
+      `;
+    }
+
+    function renderResponse(data) {
+      const platforms = Object.entries(data.results || {});
+      const selectedPlatforms = (data.platforms || []).map((name) => `<span class="summary-pill">${escapeHtml(name)}</span>`).join("");
+      results.innerHTML = `
+        <div class="status-line">
+          <div>
+            <strong>Busca concluida para "${escapeHtml(data.query || "")}".</strong>
+            <div class="subtle">Categoria aplicada: ${escapeHtml(data.category || "auto")} | Total extraido: ${escapeHtml(data.total_items || 0)} itens | Tempo total: ${escapeHtml(formatMilliseconds(data.elapsed_ms))}${data.parallel ? " | execucao paralela" : ""}.</div>
+          </div>
+          <div class="summary">
+            ${selectedPlatforms}
+            ${data.json_snapshot ? `<a class="summary-pill" href="${escapeHtml(data.json_snapshot)}" target="_blank" rel="noopener noreferrer">JSON combinado</a>` : ""}
+          </div>
+        </div>
+        <div class="platforms">
+          ${platforms.map(([name, result]) => platformTemplate(name, result)).join("")}
+        </div>
+      `;
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const query = document.getElementById("query").value.trim();
+      const maxResults = Number(document.getElementById("max-results").value || 8);
+      const category = document.getElementById("category").value;
+      const headless = document.getElementById("headless").checked;
+      const platforms = Array.from(document.querySelectorAll('input[name="platform"]:checked'))
+        .map((input) => input.value);
+
+      if (!query) {
+        results.innerHTML = `
+          <div class="status-line">
+            <strong>Informe um termo de busca.</strong>
+            <span class="subtle">Ex.: gtx 1060, iphone 13, cadeira gamer.</span>
+          </div>
+        `;
+        return;
+      }
+
+      if (!platforms.length) {
+        results.innerHTML = `
+          <div class="status-line">
+            <strong>Selecione pelo menos uma plataforma.</strong>
+            <span class="subtle">OLX e Mercado Livre ja estao marcados por padrao.</span>
+          </div>
+        `;
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = "Pesquisando...";
+      results.innerHTML = `
+        <div class="status-line">
+          <strong>Executando a busca por "${escapeHtml(query)}"... </strong>
+          <span class="subtle">O navegador pode abrir durante a captura.</span>
+        </div>
+      `;
+
+      try {
+        const response = await fetch("/api/search", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            query,
+            platforms,
+            category,
+            max_results: maxResults,
+            headless
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.detail || data.error || "Falha ao executar a busca.");
+        }
+
+        renderResponse(data);
+      } catch (error) {
+        results.innerHTML = `
+          <div class="status-line">
+            <strong>Falha ao pesquisar.</strong>
+            <span class="subtle">${escapeHtml(error.message || "Erro inesperado.")}</span>
+          </div>
+        `;
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Pesquisar agora";
+      }
+    });
+  </script>
+</body>
+</html>
