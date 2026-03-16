@@ -439,6 +439,20 @@ def query_tokens(query: str) -> list[str]:
     return [token for token in match_tokens(query) if token not in QUERY_NOISE_TOKENS]
 
 
+def has_match_term(normalized_value: str, tokens: set[str], term: str) -> bool:
+    normalized_term = normalize_match_text(term)
+    if not normalized_term:
+        return False
+    if " " in normalized_term:
+        return f" {normalized_term} " in f" {normalized_value} "
+    term_tokens = match_tokens(normalized_term)
+    return bool(term_tokens) and all(token in tokens for token in term_tokens)
+
+
+def has_any_match_term(normalized_value: str, tokens: set[str], terms: tuple[str, ...]) -> bool:
+    return any(has_match_term(normalized_value, tokens, term) for term in terms)
+
+
 def is_xeon_query(query: str) -> bool:
     return "xeon" in normalize_match_text(query)
 
@@ -853,6 +867,8 @@ def resolve_category(query: str, category: str | None) -> str:
 def evaluate_title_reason(query: str, title: str, resolved_category: str = "auto") -> str:
     title_match = normalize_match_text(title)
     query_match = normalize_match_text(query)
+    title_tokens = set(match_tokens(title))
+    query_token_set = set(match_tokens(query))
     gpu_query = any(term in query_match for term in GPU_QUERY_TERMS)
     xeon_query = is_xeon_query(query)
     processor_bundle_query = is_processor_bundle_query(query)
@@ -879,32 +895,60 @@ def evaluate_title_reason(query: str, title: str, resolved_category: str = "auto
         return "variant_mismatch"
 
     if resolved_category == "placa-de-video":
-        if any(term in title_match for term in NOTEBOOK_TERMS):
+        if has_any_match_term(title_match, title_tokens, NOTEBOOK_TERMS):
             return "category_mismatch"
-        if any(term in title_match and term not in query_match for term in PC_TERMS):
+        if any(
+            has_match_term(title_match, title_tokens, term)
+            and not has_match_term(query_match, query_token_set, term)
+            for term in PC_TERMS
+        ):
             return "category_mismatch"
-        if any(term in title_match and term not in query_match for term in SYSTEM_SPEC_TERMS):
+        if any(
+            has_match_term(title_match, title_tokens, term)
+            and not has_match_term(query_match, query_token_set, term)
+            for term in SYSTEM_SPEC_TERMS
+        ):
             return "category_mismatch"
-        if any(term in title_match and term not in query_match for term in GPU_ACCESSORY_TERMS):
+        if any(
+            has_match_term(title_match, title_tokens, term)
+            and not has_match_term(query_match, query_token_set, term)
+            for term in GPU_ACCESSORY_TERMS
+        ):
             return "category_mismatch"
     elif resolved_category == "notebook":
-        if not any(term in title_match for term in NOTEBOOK_TERMS):
+        if not has_any_match_term(title_match, title_tokens, NOTEBOOK_TERMS):
             return "category_mismatch"
     elif resolved_category == "pc-completo":
-        if not any(term in title_match for term in PC_TERMS):
+        if not has_any_match_term(title_match, title_tokens, PC_TERMS):
             return "category_mismatch"
     elif resolved_category == "processador":
-        if any(term in title_match and term not in query_match for term in NOTEBOOK_TERMS):
+        if any(
+            has_match_term(title_match, title_tokens, term)
+            and not has_match_term(query_match, query_token_set, term)
+            for term in NOTEBOOK_TERMS
+        ):
             return "category_mismatch"
-        if any(term in title_match and term not in query_match for term in PC_TERMS):
+        if any(
+            has_match_term(title_match, title_tokens, term)
+            and not has_match_term(query_match, query_token_set, term)
+            for term in PC_TERMS
+        ):
             return "category_mismatch"
         if (
             not processor_bundle_query
-            and any(term in title_match and term not in query_match for term in PROCESSOR_BUNDLE_TERMS)
+            and any(
+                has_match_term(title_match, title_tokens, term)
+                and not has_match_term(query_match, query_token_set, term)
+                for term in PROCESSOR_BUNDLE_TERMS
+            )
         ):
             return "bundle_term"
     elif gpu_query:
-        if any(term in title_match and term not in query_match for term in SYSTEM_SPEC_TERMS):
+        if any(
+            has_match_term(title_match, title_tokens, term)
+            and not has_match_term(query_match, query_token_set, term)
+            for term in SYSTEM_SPEC_TERMS
+        ):
             return "bundle_term"
 
     return ""
