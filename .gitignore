@@ -12,6 +12,7 @@ __pycache__/
 .idea/
 .DS_Store
 Thumbs.db
+*.lnk
 
 # Runtime logs
 server.out
@@ -25,6 +26,10 @@ chrome-win64/
 # Generated artifacts
 artifacts/
 .launcher/
+*.egg-info/
+build/
+dist/
+dist_*/
 
 # Local captured pages and sample dumps
 *_dados_estruturados.json
@@ -37,6 +42,7 @@ artifacts/
 olx_sample.html
 sample_metadata.json
 sample_structured_data.json
+tmp_*.html
 
 # Optional local env files
 .env

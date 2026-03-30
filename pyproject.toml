@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "marketplace-search"
+version = "2.7.0"
+description = "Aplicacao local para pesquisar produtos em marketplaces com FastAPI, Selenium e interface web."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "beautifulsoup4==4.14.3",
+    "fastapi==0.135.1",
+    "pydantic==2.12.5",
+    "python-multipart==0.0.22",
+    "requests==2.32.5",
+    "selenium==4.41.0",
+    "uvicorn==0.41.0",
+]
+
+[project.scripts]
+marketplace-search = "main:main"
+marketplace-search-launcher = "launcher:main"
+
+[tool.setuptools]
+packages = ["marketplace_search"]
+py-modules = ["launcher", "main", "marketplace_scraper"]
+
+[tool.setuptools.package-data]
+marketplace_search = ["ui.html"]

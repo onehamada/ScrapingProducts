@@ -2,6 +2,8 @@
 setlocal
 cd /d "%~dp0"
 
+if "%MARKETPLACE_AUTO_UPDATE%"=="" set "MARKETPLACE_AUTO_UPDATE=true"
+
 where python >nul 2>nul
 if %errorlevel%==0 (
     python launcher.py %*
