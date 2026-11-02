@@ -2,7 +2,7 @@ PROJETO - ENGENHARIA DE SOFTWARE - ESTACIO PISTAL SUL, DF
 INTEGRANTES:
 Wesley Gabriel Batista Rosa - 202601418793
 Guilherme Araujo - 202408147627
-Marcely Bomfim Barella
+Marcely Bomfim Barella - 202603316301
 Fernando Miguel Costa Cardoso  -  202601835904
 Stenio Daniel Santos de Araújo - 202607148283
 
@@ -11,6 +11,10 @@ Stenio Daniel Santos de Araújo - 202607148283
 # Marketplace Search
 
 Aplicacao local para pesquisar produtos em marketplaces com FastAPI, Selenium e uma interface web unica. O projeto foi refinado para funcionar melhor como app independente: configuracao centralizada, comando proprio de execucao e workspace separado do codigo.
+
+## Objetivo
+
+Desenvolver uma aplicacao local para pesquisar e comparar produtos em diferentes marketplaces, reunindo resultados e oportunidades de compra em uma unica interface.
 
 ## O que o app entrega
 
