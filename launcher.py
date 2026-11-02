@@ -18,12 +18,13 @@ from marketplace_search.settings import ensure_runtime_directories, get_settings
 
 
 ROOT_DIR = Path(__file__).resolve().parent
-VENV_DIR = ROOT_DIR / ".venv"
+PYTHON_VERSION = f"{sys.version_info.major}.{sys.version_info.minor}"
+VENV_DIR = ROOT_DIR / f".venv-py{PYTHON_VERSION}"
 REQUIREMENTS_FILE = ROOT_DIR / "requirements.txt"
 PYPROJECT_FILE = ROOT_DIR / "pyproject.toml"
 SETTINGS = ensure_runtime_directories(get_settings())
 STATE_DIR = SETTINGS.launcher_state_dir
-REQUIREMENTS_STAMP = STATE_DIR / "requirements.sha256"
+REQUIREMENTS_STAMP = STATE_DIR / f"requirements-py{PYTHON_VERSION}.sha256"
 UPDATE_STATE_FILE = STATE_DIR / "update-state.json"
 DEFAULT_UPDATE_REPO = "https://github.com/onehamada/ScrapingProducts"
 DEFAULT_UPDATE_BRANCH = "main"
@@ -479,6 +480,14 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
+    if not (3, 11) <= sys.version_info[:2] < (3, 15):
+        current_version = ".".join(str(part) for part in sys.version_info[:3])
+        print(
+            "[launcher] Python 3.11 a 3.14 e necessario. "
+            f"Versao atual: {current_version}. Instale Python 3.13 e tente novamente."
+        )
+        return 1
+
     try:
         updated_version = maybe_self_update(args)
         if args.update_only:

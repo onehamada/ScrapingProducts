@@ -1,3 +1,13 @@
+PROJETO - ENGENHARIA DE SOFTWARE - ESTACIO PISTAL SUL, DF
+INTEGRANTES:
+Wesley Gabriel Batista Rosa - 202601418793
+Guilherme Araujo - 202408147627
+Marcely Bomfim Barella
+Fernando Miguel Costa Cardoso  -  202601835904
+Stenio Daniel Santos de Araújo - 202607148283
+
+
+
 # Marketplace Search
 
 Aplicacao local para pesquisar produtos em marketplaces com FastAPI, Selenium e uma interface web unica. O projeto foi refinado para funcionar melhor como app independente: configuracao centralizada, comando proprio de execucao e workspace separado do codigo.
@@ -15,6 +25,8 @@ Aplicacao local para pesquisar produtos em marketplaces com FastAPI, Selenium e 
 - Endpoints JSON para integracao
 
 ## Como rodar a partir do codigo
+
+Use Python 3.11 a 3.14 (recomendado: Python 3.13). O Python 3.15 ainda nao e compativel com as dependencias fixadas neste projeto.
 
 1. Instale as dependencias:
 
@@ -56,7 +68,7 @@ python launcher.py
 
 O launcher:
 
-- cria `.venv` automaticamente se necessario
+- cria um ambiente virtual separado por versao do Python automaticamente, se necessario
 - atualiza o `pip` na primeira execucao
 - instala ou atualiza as dependencias
 - inicia o modulo `marketplace_search`
