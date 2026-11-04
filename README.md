@@ -1,102 +1,115 @@
-PROJETO - ENGENHARIA DE SOFTWARE - ESTACIO PISTAL SUL, DF
-INTEGRANTES:
-Wesley Gabriel Batista Rosa - 202601418793
-Guilherme Araujo - 202408147627
-Marcely Bomfim Barella - 202603316301
-Fernando Miguel Costa Cardoso  -  202601835904
-Stenio Daniel Santos de Araújo - 202607148283
+# 🛒✨ Marketplace Search
 
+> Chega de abrir 7 abas pra caçar a melhor oferta! 🔎💸
+> Pesquise **uma vez** e compare preços em vários marketplaces de uma só vez. 🚀
 
+---
 
-# Marketplace Search
+## 🎓 Sobre o projeto
 
-Aplicacao local para pesquisar produtos em marketplaces com FastAPI, Selenium e uma interface web unica. O projeto foi refinado para funcionar melhor como app independente: configuracao centralizada, comando proprio de execucao e workspace separado do codigo.
+**Projeto de Engenharia de Software — Estácio Pistão Sul, DF** 💙
 
-## Objetivo
+### 👥 A squad
 
-Desenvolver uma aplicacao local para pesquisar e comparar produtos em diferentes marketplaces, reunindo resultados e oportunidades de compra em uma unica interface.
+| Nome | Matrícula |
+|------|-----------|
+| 😎 Wesley Gabriel Batista Rosa | 202601418793 |
+| 🚀 Guilherme Araujo | 202408147627 |
+| 🌟 Marcely Bomfim Barella | 202603316301 |
+| 🔥 Fernando Miguel Costa Cardoso | 202601835904 |
+| 💻 Stenio Daniel Santos de Araújo | 202607148283 |
 
-## O que o app entrega
+---
 
-- Busca em OLX, Mercado Livre, KaBuM, Terabyte, PC Gamer Brasilia, AliExpress e Facebook
-- Interface web em `/` com busca unica, radar comercial e exportacao
-- Busca paralela entre plataformas
-- Cache curto para consultas repetidas
-- Perfil de hardware e filtros automaticos a partir do texto digitado
-- Filtro automatico por titulo, perfil detectado e variacoes de query
-- Comparativo comercial com mediana filtrada, menor preco e oportunidades
-- Exportacao em CSV e resumo comercial pronto para copiar
-- Endpoints JSON para integracao
+## 🎯 Qual é a ideia?
 
-## Como rodar a partir do codigo
+Um app local que pesquisa e compara produtos em vários marketplaces, juntando resultados e oportunidades de compra numa interface única. Feito com **FastAPI + Selenium** 🐍⚡
 
-Use Python 3.11 a 3.14 (recomendado: Python 3.13). O Python 3.15 ainda nao e compativel com as dependencias fixadas neste projeto.
+## 🎁 O que o app faz
 
-1. Instale as dependencias:
+- 🛍️ Busca em **OLX, Mercado Livre, KaBuM, Terabyte, PC Gamer Brasília, AliExpress e Facebook**
+- 🖥️ Interface web em `/` com busca única, radar comercial e exportação
+- ⚡ Busca paralela entre as plataformas (bem mais rápido!)
+- 🧠 Cache curto pra consultas repetidas
+- 🎮 Perfil de hardware e filtros automáticos a partir do texto que você digita
+- 🧹 Filtro inteligente por título, perfil detectado e variações de query
+- 📊 Comparativo comercial: mediana filtrada, menor preço e oportunidades
+- 📥 Exportação em CSV + resumo comercial pronto pra copiar
+- 🔌 Endpoints JSON pra integrar com o que você quiser
+
+---
+
+## 🏁 Bora rodar?
+
+> 🐍 Use **Python 3.11 a 3.14** (recomendado: **3.13**). O Python 3.15 ainda não é compatível com as dependências fixadas.
+
+**1️⃣ Instale as dependências:**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-2. Inicie a aplicacao:
+**2️⃣ Inicie o app:**
 
 ```bash
 python -m marketplace_search
 ```
 
-3. A interface abre em:
+**3️⃣ Abra no navegador:** 🌐
 
 ```text
 http://127.0.0.1:8000
 ```
 
-Voce tambem pode controlar host, porta e navegador:
+Quer mexer em host, porta e navegador? Dá pra fazer 🛠️
 
 ```bash
 python -m marketplace_search --host 127.0.0.1 --port 8000 --no-browser
 ```
 
-## Inicializacao automatica no Windows
+---
 
-Se quiser abrir com duplo clique:
+## 🪟 Modo preguiça no Windows (duplo clique!)
 
 ```text
 start_marketplace.bat
 ```
 
-Ou via launcher:
+Ou pelo launcher:
 
 ```bash
 python launcher.py
 ```
 
-O launcher:
+### 🤖 O que o launcher faz por você
 
-- cria um ambiente virtual separado por versao do Python automaticamente, se necessario
-- atualiza o `pip` na primeira execucao
-- instala ou atualiza as dependencias
-- inicia o modulo `marketplace_search`
-- pode buscar atualizacoes no GitHub antes de abrir o app
+- 🧪 Cria um ambiente virtual separado por versão do Python (se precisar)
+- ⬆️ Atualiza o `pip` na primeira execução
+- 📦 Instala/atualiza as dependências
+- ▶️ Inicia o módulo `marketplace_search`
+- 🔄 Pode buscar atualizações no GitHub antes de abrir
 
-Para apenas preparar o ambiente:
+Só quer preparar o ambiente?
 
 ```bash
 python launcher.py --bootstrap-only
 ```
 
-## Atualizacao automatica em outra maquina
+---
 
-O caminho mais simples para distribuir com update automatico e mandar a pasta do projeto com o `start_marketplace.bat` e deixar o usuario abrir sempre por ele.
+## 🔄 Atualização automática em outra máquina
 
-O `.bat` ja liga `MARKETPLACE_AUTO_UPDATE=true` por padrao, entao a cada abertura o launcher:
+O jeito mais fácil: mande a pasta do projeto com o `start_marketplace.bat` e peça pra pessoa **sempre abrir por ele** 😉
 
-- consulta o repositorio no GitHub
-- compara a versao atual ou o commit instalado
-- baixa a ultima versao da branch configurada
-- atualiza os arquivos do projeto
-- reinicia o launcher e abre o app
+O `.bat` já liga `MARKETPLACE_AUTO_UPDATE=true` por padrão. A cada abertura, o launcher:
 
-Comandos uteis:
+1. 🔍 Consulta o repositório no GitHub
+2. ⚖️ Compara a versão atual ou o commit instalado
+3. ⬇️ Baixa a última versão da branch configurada
+4. 📝 Atualiza os arquivos do projeto
+5. 🔁 Reinicia o launcher e abre o app
+
+**Comandos úteis:**
 
 ```bash
 python launcher.py --auto-update
@@ -104,43 +117,47 @@ python launcher.py --update-only
 python launcher.py --skip-update
 ```
 
-Variaveis de ambiente para controlar isso:
+**Variáveis de ambiente:**
 
 - `MARKETPLACE_AUTO_UPDATE`
 - `MARKETPLACE_UPDATE_REPO`
 - `MARKETPLACE_UPDATE_BRANCH`
 - `MARKETPLACE_UPDATE_CHECK_INTERVAL_SECONDS`
 
-Fluxo recomendado:
+**Fluxo recomendado:**
 
-1. Voce sobe as alteracoes no GitHub.
-2. A outra maquina abre o app pelo `start_marketplace.bat`.
-3. O launcher baixa a nova versao sozinho.
+1. 📤 Você sobe as alterações no GitHub
+2. 🖱️ A outra máquina abre o app pelo `start_marketplace.bat`
+3. 🎉 O launcher baixa a nova versão sozinho!
 
-Observacao: para o updater encontrar melhor as mudancas, mantenha a branch de distribuicao no GitHub atualizada. Se voce quiser uma esteira mais controlada, use a `main` so para versoes liberadas.
+> 💡 **Dica:** mantenha a branch de distribuição sempre atualizada. Quer um fluxo mais controlado? Use a `main` só para versões liberadas.
 
-## Instalacao como aplicacao
+---
 
-Agora o projeto tambem pode ser instalado como pacote local:
+## 📦 Instalação como aplicação
+
+O projeto também pode ser instalado como pacote local:
 
 ```bash
 pip install .
 marketplace-search
 ```
 
-## Workspace independente
+---
 
-Por padrao, os dados de runtime nao ficam mais misturados ao codigo.
+## 🗂️ Workspace independente
 
-- No Windows, o workspace padrao fica em `%LOCALAPPDATA%\MarketplaceSearch`
-- Fora do Windows, o padrao e `~/.marketplace-search`
-- Artefatos HTML e JSON ficam em `artifacts/` dentro desse workspace
-- Perfis persistentes do Selenium ficam em `profiles/` dentro desse workspace
-- Estado interno do launcher fica em `launcher/` dentro desse workspace
+Os dados de runtime **não ficam misturados com o código** 🧼
 
-Voce pode personalizar isso com um arquivo `.env` ou variaveis de ambiente. Existe um modelo em `.env.example`.
+- 🪟 No Windows: `%LOCALAPPDATA%\MarketplaceSearch`
+- 🐧🍎 Fora do Windows: `~/.marketplace-search`
+- 🧾 Artefatos HTML e JSON ficam em `artifacts/`
+- 👤 Perfis persistentes do Selenium ficam em `profiles/`
+- 🚀 Estado interno do launcher fica em `launcher/`
 
-Variaveis principais:
+Dá pra personalizar tudo com um arquivo `.env` ou variáveis de ambiente (tem um modelo no `.env.example`).
+
+**Variáveis principais:**
 
 - `MARKETPLACE_HOME`
 - `MARKETPLACE_HOST`
@@ -153,22 +170,26 @@ Variaveis principais:
 - `MARKETPLACE_ARTIFACTS_DIR`
 - `MARKETPLACE_PROFILE_DIR`
 
-## Endpoints principais
+---
 
-- `GET /` -> interface web
-- `GET /api/info` -> informacoes da API e do workspace atual
-- `GET /api/health` -> health check
-- `POST /api/search` -> busca multipla
-- `GET|POST /scrape/olx`
-- `GET|POST /scrape/mercadolivre`
-- `GET|POST /scrape/kabum`
-- `GET|POST /scrape/terabyte`
-- `GET|POST /scrape/pcgamerbrasilia`
-- `GET|POST /scrape/aliexpress`
-- `GET|POST /scrape/facebook`
-- `GET|POST /scrape/both`
+## 🔌 Endpoints principais
 
-## Exemplo de chamada JSON
+| Método | Rota | Pra que serve |
+|--------|------|---------------|
+| `GET` | `/` | 🖥️ Interface web |
+| `GET` | `/api/info` | ℹ️ Infos da API e do workspace |
+| `GET` | `/api/health` | 💓 Health check |
+| `POST` | `/api/search` | 🔎 Busca múltipla |
+| `GET\|POST` | `/scrape/olx` | 🟣 OLX |
+| `GET\|POST` | `/scrape/mercadolivre` | 🟡 Mercado Livre |
+| `GET\|POST` | `/scrape/kabum` | 🟠 KaBuM |
+| `GET\|POST` | `/scrape/terabyte` | 🟢 Terabyte |
+| `GET\|POST` | `/scrape/pcgamerbrasilia` | 🎮 PC Gamer Brasília |
+| `GET\|POST` | `/scrape/aliexpress` | 🔴 AliExpress |
+| `GET\|POST` | `/scrape/facebook` | 🔵 Facebook |
+| `GET\|POST` | `/scrape/both` | ✌️ Duas plataformas juntas |
+
+### 📮 Exemplo de chamada JSON
 
 ```json
 POST /api/search
@@ -180,24 +201,32 @@ POST /api/search
 }
 ```
 
-## Estrutura principal
+---
 
-- `main.py` -> API FastAPI e CLI do servidor
-- `marketplace_scraper.py` -> scrapers Selenium, filtros e analise comercial
-- `marketplace_search/settings.py` -> configuracao centralizada e workspace do app
-- `marketplace_search/ui.html` -> interface web
-- `launcher.py` -> bootstrap local no Windows ou em dev
-- `pyproject.toml` -> metadata para instalar o projeto como app
+## 🧱 Estrutura principal
 
-## Observacoes praticas
+- 🐍 `main.py` → API FastAPI e CLI do servidor
+- 🕷️ `marketplace_scraper.py` → scrapers Selenium, filtros e análise comercial
+- ⚙️ `marketplace_search/settings.py` → configuração centralizada e workspace
+- 🎨 `marketplace_search/ui.html` → interface web
+- 🚀 `launcher.py` → bootstrap local no Windows ou em dev
+- 📦 `pyproject.toml` → metadados pra instalar o projeto como app
 
-- O Selenium procura um Chrome local primeiro no workspace da aplicacao e depois em `chrome-win64` no projeto.
-- As buscas podem abrir uma janela real do navegador. Isso e proposital, porque muitos sites bloqueiam navegacao headless.
-- Consultas repetidas iguais podem voltar do cache por ate 120 segundos por padrao.
-- Em buscas multiplas, a API roda as plataformas em paralelo para reduzir o tempo total.
-- Dumps HTML de buscas bem-sucedidas ficam desligados por padrao para reduzir I/O; voce pode religar isso no `.env`.
-- KaBuM extrai os produtos pelo JSON embutido da propria pagina de busca.
-- Terabyte pode ativar protecao anti-bot em algumas tentativas, principalmente em ambientes muito automatizados.
-- PC Gamer Brasilia usa navegador real porque o site pode bloquear requisicoes diretas em algumas tentativas.
-- AliExpress pode pedir captcha ou verificacao manual; ela tende a funcionar melhor com `headless=false`.
-- Para o Facebook, rode com `headless=false`. Na primeira execucao o navegador pode ficar aberto por alguns minutos para voce fazer login manual usando o perfil persistente do workspace.
+---
+
+## ⚠️ Dicas e pegadinhas
+
+- 🌐 O Selenium procura um Chrome local primeiro no workspace da aplicação e depois em `chrome-win64` no projeto.
+- 👀 As buscas podem abrir uma **janela real** do navegador. É de propósito: muitos sites bloqueiam navegação headless!
+- ⏱️ Consultas repetidas voltam do cache por até **120 segundos** (padrão).
+- ⚡ Em buscas múltiplas, as plataformas rodam em paralelo pra economizar tempo.
+- 💾 Dumps HTML de buscas bem-sucedidas ficam desligados por padrão (menos I/O). Dá pra religar no `.env`.
+- 🟠 **KaBuM:** extrai os produtos pelo JSON embutido na própria página de busca.
+- 🟢 **Terabyte:** pode ativar proteção anti-bot em algumas tentativas, principalmente em ambientes muito automatizados.
+- 🎮 **PC Gamer Brasília:** usa navegador real porque o site pode bloquear requisições diretas.
+- 🔴 **AliExpress:** pode pedir captcha ou verificação manual. Funciona melhor com `headless=false`.
+- 🔵 **Facebook:** rode com `headless=false`! Na primeira execução o navegador pode ficar aberto por alguns minutos pra você fazer login manual no perfil persistente do workspace.
+
+---
+
+<p align="center">Feito com 💙, ☕ e muito código pela squad da Estácio 🎓</p>
