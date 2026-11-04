@@ -1,115 +1,86 @@
-# 🛒✨ Marketplace Search
+# Marketplace Search
 
-> Chega de abrir 7 abas pra caçar a melhor oferta! 🔎💸
-> Pesquise **uma vez** e compare preços em vários marketplaces de uma só vez. 🚀
+Aplicação local para pesquisar produtos em diferentes marketplaces e comparar resultados em uma única interface. O projeto utiliza FastAPI e Selenium e oferece uma API HTTP para consultas e integrações.
 
----
+## Sobre o projeto
 
-## 🎓 Sobre o projeto
+Projeto acadêmico de Engenharia de Software da Estácio, unidade Pistão Sul, Distrito Federal.
 
-**Projeto de Engenharia de Software — Estácio Pistão Sul, DF** 💙
+### Equipe
 
-### 👥 A squad
+| Integrante | Matrícula |
+|---|---|
+| Wesley Gabriel Batista Rosa | 202601418793 |
+| Guilherme Araujo | 202408147627 |
+| Marcely Bomfim Barella | 202603316301 |
+| Fernando Miguel Costa Cardoso | 202601835904 |
+| Stenio Daniel Santos de Araújo | 202607148283 |
 
-| Nome | Matrícula |
-|------|-----------|
-| 😎 Wesley Gabriel Batista Rosa | 202601418793 |
-| 🚀 Guilherme Araujo | 202408147627 |
-| 🌟 Marcely Bomfim Barella | 202603316301 |
-| 🔥 Fernando Miguel Costa Cardoso | 202601835904 |
-| 💻 Stenio Daniel Santos de Araújo | 202607148283 |
+## Recursos
 
----
+- Pesquisa em OLX, Mercado Livre, KaBuM, Terabyte, PC Gamer Brasília, AliExpress e Facebook.
+- Consultas simultâneas em múltiplas plataformas.
+- Interface web com busca, filtros, análise comparativa e exportação de resultados em CSV.
+- Identificação de perfis de hardware e variações de termos de pesquisa.
+- Indicadores comerciais, incluindo menor preço e mediana dos resultados filtrados.
+- Cache para reduzir o tempo de consultas repetidas.
+- Endpoints JSON para integração com outras aplicações.
 
-## 🎯 Qual é a ideia?
+Os resultados dependem da disponibilidade, do conteúdo e das políticas de acesso de cada plataforma. Respeite os termos de uso e as regras aplicáveis ao utilizar o sistema.
 
-Um app local que pesquisa e compara produtos em vários marketplaces, juntando resultados e oportunidades de compra numa interface única. Feito com **FastAPI + Selenium** 🐍⚡
+## Requisitos
 
-## 🎁 O que o app faz
+- Python 3.11, 3.12, 3.13 ou 3.14. Python 3.15 ainda não é compatível com as dependências fixadas no projeto.
+- Google Chrome para as consultas que utilizam Selenium. O navegador pode ser configurado por variável de ambiente.
 
-- 🛍️ Busca em **OLX, Mercado Livre, KaBuM, Terabyte, PC Gamer Brasília, AliExpress e Facebook**
-- 🖥️ Interface web em `/` com busca única, radar comercial e exportação
-- ⚡ Busca paralela entre as plataformas (bem mais rápido!)
-- 🧠 Cache curto pra consultas repetidas
-- 🎮 Perfil de hardware e filtros automáticos a partir do texto que você digita
-- 🧹 Filtro inteligente por título, perfil detectado e variações de query
-- 📊 Comparativo comercial: mediana filtrada, menor preço e oportunidades
-- 📥 Exportação em CSV + resumo comercial pronto pra copiar
-- 🔌 Endpoints JSON pra integrar com o que você quiser
+## Instalação e execução
 
----
-
-## 🏁 Bora rodar?
-
-> 🐍 Use **Python 3.11 a 3.14** (recomendado: **3.13**). O Python 3.15 ainda não é compatível com as dependências fixadas.
-
-**1️⃣ Instale as dependências:**
+Instale as dependências:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-**2️⃣ Inicie o app:**
+Inicie a aplicação:
 
 ```bash
 python -m marketplace_search
 ```
 
-**3️⃣ Abra no navegador:** 🌐
-
-```text
-http://127.0.0.1:8000
-```
-
-Quer mexer em host, porta e navegador? Dá pra fazer 🛠️
+Por padrão, a interface é disponibilizada em `http://127.0.0.1:8000`. Para definir o endereço, a porta e impedir a abertura automática do navegador:
 
 ```bash
 python -m marketplace_search --host 127.0.0.1 --port 8000 --no-browser
 ```
 
----
+### Windows
 
-## 🪟 Modo preguiça no Windows (duplo clique!)
-
-```text
-start_marketplace.bat
-```
-
-Ou pelo launcher:
+No Windows, a aplicação também pode ser iniciada pelo arquivo `start_marketplace.bat` ou pelo launcher:
 
 ```bash
 python launcher.py
 ```
 
-### 🤖 O que o launcher faz por você
-
-- 🧪 Cria um ambiente virtual separado por versão do Python (se precisar)
-- ⬆️ Atualiza o `pip` na primeira execução
-- 📦 Instala/atualiza as dependências
-- ▶️ Inicia o módulo `marketplace_search`
-- 🔄 Pode buscar atualizações no GitHub antes de abrir
-
-Só quer preparar o ambiente?
+O launcher prepara o ambiente virtual, instala ou atualiza as dependências e inicia a aplicação. Para preparar o ambiente sem iniciar o servidor:
 
 ```bash
 python launcher.py --bootstrap-only
 ```
 
----
+### Instalação como pacote
 
-## 🔄 Atualização automática em outra máquina
+Também é possível instalar o projeto no ambiente Python ativo e iniciar pelo comando disponibilizado:
 
-O jeito mais fácil: mande a pasta do projeto com o `start_marketplace.bat` e peça pra pessoa **sempre abrir por ele** 😉
+```bash
+pip install .
+marketplace-search
+```
 
-O `.bat` já liga `MARKETPLACE_AUTO_UPDATE=true` por padrão. A cada abertura, o launcher:
+## Atualização pelo launcher
 
-1. 🔍 Consulta o repositório no GitHub
-2. ⚖️ Compara a versão atual ou o commit instalado
-3. ⬇️ Baixa a última versão da branch configurada
-4. 📝 Atualiza os arquivos do projeto
-5. 🔁 Reinicia o launcher e abre o app
+O arquivo `start_marketplace.bat` habilita a atualização automática por padrão. Antes de iniciar a aplicação, o launcher pode consultar o repositório configurado e atualizar os arquivos para a branch selecionada.
 
-**Comandos úteis:**
+Comandos disponíveis:
 
 ```bash
 python launcher.py --auto-update
@@ -117,47 +88,23 @@ python launcher.py --update-only
 python launcher.py --skip-update
 ```
 
-**Variáveis de ambiente:**
+Variáveis relacionadas à atualização:
 
 - `MARKETPLACE_AUTO_UPDATE`
 - `MARKETPLACE_UPDATE_REPO`
 - `MARKETPLACE_UPDATE_BRANCH`
 - `MARKETPLACE_UPDATE_CHECK_INTERVAL_SECONDS`
 
-**Fluxo recomendado:**
+## Configuração e dados locais
 
-1. 📤 Você sobe as alterações no GitHub
-2. 🖱️ A outra máquina abre o app pelo `start_marketplace.bat`
-3. 🎉 O launcher baixa a nova versão sozinho!
+As configurações podem ser definidas por variáveis de ambiente ou em um arquivo `.env` no diretório de execução ou no diretório de dados da aplicação.
 
-> 💡 **Dica:** mantenha a branch de distribuição sempre atualizada. Quer um fluxo mais controlado? Use a `main` só para versões liberadas.
+Por padrão, os dados de execução ficam fora dos arquivos do projeto:
 
----
+- Windows: `%LOCALAPPDATA%\MarketplaceSearch`
+- Outros sistemas: `~/.marketplace-search`
 
-## 📦 Instalação como aplicação
-
-O projeto também pode ser instalado como pacote local:
-
-```bash
-pip install .
-marketplace-search
-```
-
----
-
-## 🗂️ Workspace independente
-
-Os dados de runtime **não ficam misturados com o código** 🧼
-
-- 🪟 No Windows: `%LOCALAPPDATA%\MarketplaceSearch`
-- 🐧🍎 Fora do Windows: `~/.marketplace-search`
-- 🧾 Artefatos HTML e JSON ficam em `artifacts/`
-- 👤 Perfis persistentes do Selenium ficam em `profiles/`
-- 🚀 Estado interno do launcher fica em `launcher/`
-
-Dá pra personalizar tudo com um arquivo `.env` ou variáveis de ambiente (tem um modelo no `.env.example`).
-
-**Variáveis principais:**
+Nesse diretório, a aplicação armazena artefatos HTML e JSON, perfis persistentes do Selenium e o estado do launcher. Variáveis de configuração comuns:
 
 - `MARKETPLACE_HOME`
 - `MARKETPLACE_HOST`
@@ -170,29 +117,26 @@ Dá pra personalizar tudo com um arquivo `.env` ou variáveis de ambiente (tem u
 - `MARKETPLACE_ARTIFACTS_DIR`
 - `MARKETPLACE_PROFILE_DIR`
 
----
+## API HTTP
 
-## 🔌 Endpoints principais
+| Método | Rota | Descrição |
+|---|---|---|
+| `GET` | `/` | Interface web |
+| `GET` | `/api/info` | Informações da API e do diretório de dados |
+| `GET` | `/api/health` | Verificação de disponibilidade |
+| `POST` | `/api/search` | Pesquisa em uma ou mais plataformas |
+| `GET` ou `POST` | `/scrape/olx` | Pesquisa na OLX |
+| `GET` ou `POST` | `/scrape/mercadolivre` | Pesquisa no Mercado Livre |
+| `GET` ou `POST` | `/scrape/kabum` | Pesquisa na KaBuM |
+| `GET` ou `POST` | `/scrape/terabyte` | Pesquisa na Terabyte |
+| `GET` ou `POST` | `/scrape/pcgamerbrasilia` | Pesquisa na PC Gamer Brasília |
+| `GET` ou `POST` | `/scrape/aliexpress` | Pesquisa no AliExpress |
+| `GET` ou `POST` | `/scrape/facebook` | Pesquisa no Facebook |
+| `GET` ou `POST` | `/scrape/both` | Pesquisa em duas plataformas |
 
-| Método | Rota | Pra que serve |
-|--------|------|---------------|
-| `GET` | `/` | 🖥️ Interface web |
-| `GET` | `/api/info` | ℹ️ Infos da API e do workspace |
-| `GET` | `/api/health` | 💓 Health check |
-| `POST` | `/api/search` | 🔎 Busca múltipla |
-| `GET\|POST` | `/scrape/olx` | 🟣 OLX |
-| `GET\|POST` | `/scrape/mercadolivre` | 🟡 Mercado Livre |
-| `GET\|POST` | `/scrape/kabum` | 🟠 KaBuM |
-| `GET\|POST` | `/scrape/terabyte` | 🟢 Terabyte |
-| `GET\|POST` | `/scrape/pcgamerbrasilia` | 🎮 PC Gamer Brasília |
-| `GET\|POST` | `/scrape/aliexpress` | 🔴 AliExpress |
-| `GET\|POST` | `/scrape/facebook` | 🔵 Facebook |
-| `GET\|POST` | `/scrape/both` | ✌️ Duas plataformas juntas |
-
-### 📮 Exemplo de chamada JSON
+Exemplo de requisição para `POST /api/search`:
 
 ```json
-POST /api/search
 {
   "query": "gtx 1060",
   "platforms": ["olx", "mercadolivre"],
@@ -201,32 +145,20 @@ POST /api/search
 }
 ```
 
----
+## Estrutura do projeto
 
-## 🧱 Estrutura principal
+- `main.py`: API FastAPI e interface de linha de comando do servidor.
+- `marketplace_scraper.py`: scrapers Selenium, filtros e análise dos resultados.
+- `marketplace_search/settings.py`: configurações e diretórios de execução.
+- `marketplace_search/ui.html`: interface web.
+- `launcher.py`: preparação do ambiente e inicialização da aplicação.
+- `pyproject.toml`: metadados e configuração de instalação do pacote.
 
-- 🐍 `main.py` → API FastAPI e CLI do servidor
-- 🕷️ `marketplace_scraper.py` → scrapers Selenium, filtros e análise comercial
-- ⚙️ `marketplace_search/settings.py` → configuração centralizada e workspace
-- 🎨 `marketplace_search/ui.html` → interface web
-- 🚀 `launcher.py` → bootstrap local no Windows ou em dev
-- 📦 `pyproject.toml` → metadados pra instalar o projeto como app
+## Observações de uso
 
----
-
-## ⚠️ Dicas e pegadinhas
-
-- 🌐 O Selenium procura um Chrome local primeiro no workspace da aplicação e depois em `chrome-win64` no projeto.
-- 👀 As buscas podem abrir uma **janela real** do navegador. É de propósito: muitos sites bloqueiam navegação headless!
-- ⏱️ Consultas repetidas voltam do cache por até **120 segundos** (padrão).
-- ⚡ Em buscas múltiplas, as plataformas rodam em paralelo pra economizar tempo.
-- 💾 Dumps HTML de buscas bem-sucedidas ficam desligados por padrão (menos I/O). Dá pra religar no `.env`.
-- 🟠 **KaBuM:** extrai os produtos pelo JSON embutido na própria página de busca.
-- 🟢 **Terabyte:** pode ativar proteção anti-bot em algumas tentativas, principalmente em ambientes muito automatizados.
-- 🎮 **PC Gamer Brasília:** usa navegador real porque o site pode bloquear requisições diretas.
-- 🔴 **AliExpress:** pode pedir captcha ou verificação manual. Funciona melhor com `headless=false`.
-- 🔵 **Facebook:** rode com `headless=false`! Na primeira execução o navegador pode ficar aberto por alguns minutos pra você fazer login manual no perfil persistente do workspace.
-
----
-
-<p align="center">Feito com 💙, ☕ e muito código pela squad da Estácio 🎓</p>
+- O Selenium procura o Chrome configurado em `MARKETPLACE_CHROME_BINARY` e também verifica os diretórios locais previstos pela aplicação.
+- Algumas consultas exigem uma janela de navegador visível. O modo sem interface pode não funcionar em plataformas que solicitam verificação adicional.
+- O cache de consultas tem duração padrão de 120 segundos.
+- A busca múltipla executa as consultas em paralelo.
+- A gravação de snapshots HTML de consultas bem-sucedidas fica desativada por padrão; pode ser habilitada por `MARKETPLACE_SAVE_SUCCESS_HTML_SNAPSHOTS`.
+- Algumas plataformas podem apresentar captcha, autenticação ou mecanismos de proteção. No Facebook, pode ser necessário entrar manualmente na primeira execução; o perfil do navegador é persistido no diretório de dados da aplicação.
