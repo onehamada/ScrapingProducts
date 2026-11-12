@@ -52,6 +52,8 @@ class QueryMatchingTests(unittest.TestCase):
                 "success": False,
                 "count": 0,
                 "error": "Verificacao de seguranca",
+                "html_snapshot": "/artifacts/html/mercadolivre.html",
+                "json_snapshot": "/artifacts/json/mercadolivre.json",
                 "items": [],
             },
             "facebook": {
@@ -69,6 +71,10 @@ class QueryMatchingTests(unittest.TestCase):
         )
         self.assertEqual(report["results"]["mercadolivre"]["status"], "failed")
         self.assertEqual(report["results"]["facebook"]["status"], "no_results")
+        self.assertEqual(
+            report["results"]["mercadolivre"]["html_snapshot"],
+            "/artifacts/html/mercadolivre.html",
+        )
         self.assertEqual(len(report["issues"]), 2)
 
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -120,6 +126,19 @@ class QueryMatchingTests(unittest.TestCase):
         )
 
     def test_mercadolivre_account_verification_is_reported_as_error(self) -> None:
+        scraper = MercadoLivreScraper(ChromeFactory(), ArtifactStore())
+
+        error = scraper.detect_error(
+            "Mercado Libre",
+            '<html><body><main class="suspicious-traffic-frontend">'
+            "Ola! Para <span>continuar,</span> acesse sua conta"
+            "</main></body></html>",
+            "https://www.mercadolivre.com.br/gz/account-verification?go=%2Frx-580",
+        )
+
+        self.assertIn("login", error)
+
+    def test_mercadolivre_generic_security_check_is_reported(self) -> None:
         scraper = MercadoLivreScraper(ChromeFactory(), ArtifactStore())
 
         error = scraper.detect_error(

@@ -2759,6 +2759,8 @@ def build_error_report(
             "note": note,
             "search_url": result.get("search_url", ""),
             "final_url": result.get("final_url", ""),
+            "html_snapshot": result.get("html_snapshot", ""),
+            "json_snapshot": result.get("json_snapshot", ""),
             "page_title": result.get("page_title", ""),
             "elapsed_ms": result.get("elapsed_ms", 0.0),
             "cache_hit": bool(result.get("cache_hit", False)),
@@ -3518,6 +3520,14 @@ class MercadoLivreScraper(BaseMarketplaceScraper):
             "/gz/account-verification" in current_url.lower()
             or "suspicious-traffic-frontend" in lowered
         ):
+            visible_text = normalize_match_text(
+                BeautifulSoup(page_html, "html.parser").get_text(" ", strip=True)
+            )
+            if "para continuar acesse sua conta" in visible_text:
+                return (
+                    "Mercado Livre solicitou login para continuar esta busca. "
+                    "Entre na sua conta manualmente e tente novamente."
+                )
             return (
                 "Mercado Livre exigiu verificacao de seguranca e nao carregou os anuncios. "
                 "Conclua qualquer verificacao manual no site e tente novamente mais tarde."
