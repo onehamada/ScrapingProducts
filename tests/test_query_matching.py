@@ -10,7 +10,9 @@ from marketplace_scraper import (
     ChromeFactory,
     determine_search_target_count,
     evaluate_title_reason,
+    FacebookMarketplaceScraper,
     Listing,
+    MarketplaceService,
     OLXScraper,
     resolve_category,
     SearchCache,
@@ -20,6 +22,34 @@ from selenium.common.exceptions import WebDriverException
 
 
 class QueryMatchingTests(unittest.TestCase):
+    def test_marketplace_service_registers_all_expected_platforms(self) -> None:
+        self.assertEqual(
+            MarketplaceService().available_platforms(),
+            [
+                "olx",
+                "mercadolivre",
+                "kabum",
+                "terabyte",
+                "pcgamerbrasilia",
+                "aliexpress",
+                "facebook",
+            ],
+        )
+
+    def test_facebook_public_listing_does_not_require_login(self) -> None:
+        scraper = FacebookMarketplaceScraper(ChromeFactory(), ArtifactStore())
+        page_html = (
+            '<form><input name="email"></form>'
+            '<a href="/marketplace/item/123/">RTX 3060 R$ 2.000</a>'
+        )
+
+        self.assertFalse(
+            scraper._needs_login(
+                page_html,
+                "https://www.facebook.com/marketplace/saopaulo/search/?query=rtx",
+            )
+        )
+
     def test_monitor_query_matches_titles_with_double_quote_inches(self) -> None:
         title = 'Monitor Gamer LG 24" Full HD, 100Hz, IPS, 5ms'
         self.assertTrue(title_contains_query("monitor 24 polegadas", title))

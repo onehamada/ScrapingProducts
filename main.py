@@ -102,7 +102,7 @@ async def api_info() -> dict[str, object]:
             "Buscas repetidas entram em cache curto para responder mais rapido.",
             "Consultas em varias plataformas rodam em paralelo.",
             "O perfil da busca e os filtros de hardware sao detectados automaticamente a partir da consulta.",
-            "Facebook Marketplace geralmente exige login e continua em modo beta.",
+            "Facebook Marketplace pode retornar anuncios publicos sem login, mas algumas buscas podem exigir autenticacao.",
             "PC Gamer Brasilia usa navegador real porque o site bloqueia requisicoes diretas em algumas tentativas.",
             "AliExpress pode pedir captcha ou verificacao manual no navegador antes de liberar os resultados.",
             "Os resultados do AliExpress agora mostram avaliacao, origem do envio e a taxa de importacao do card quando ela vier destacada.",

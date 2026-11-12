@@ -4825,6 +4825,7 @@ class FacebookMarketplaceScraper(BaseMarketplaceScraper):
             or "nenhum classificado encontrado" in lowered
             or "pesquisar no marketplace" in lowered
             or 'aria-label="coleção de itens do marketplace"' in lowered
+            or "/marketplace/item/" in lowered
         )
 
     def _needs_login(self, page_html: str, current_url: str) -> bool:

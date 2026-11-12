@@ -161,4 +161,4 @@ Exemplo de requisição para `POST /api/search`:
 - O cache de consultas tem duração padrão de 120 segundos.
 - A busca múltipla executa as consultas em paralelo.
 - A gravação de snapshots HTML de consultas bem-sucedidas fica desativada por padrão; pode ser habilitada por `MARKETPLACE_SAVE_SUCCESS_HTML_SNAPSHOTS`.
-- Algumas plataformas podem apresentar captcha, autenticação ou mecanismos de proteção. No Facebook, pode ser necessário entrar manualmente na primeira execução; o perfil do navegador é persistido no diretório de dados da aplicação.
+- Algumas plataformas podem apresentar captcha, autenticação ou mecanismos de proteção. O Facebook pode retornar anúncios públicos sem login; se exigir autenticação para uma busca, o perfil do navegador pode ser usado para entrar manualmente.
