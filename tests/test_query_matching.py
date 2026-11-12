@@ -287,6 +287,27 @@ class QueryMatchingTests(unittest.TestCase):
         self.assertEqual(items[0].installment, "3x de R$ 266,33 sem juros")
         self.assertIn("Modelo: Radeon RX", items[0].raw_text)
 
+    def test_olx_parser_reads_cards_with_multiple_css_classes(self) -> None:
+        scraper = OLXScraper(ChromeFactory(), ArtifactStore())
+        html = """
+            <section class="olx-adcard olx-adcard__horizontal undefined">
+                <a data-testid="adcard-link" href="https://www.olx.com.br/informatica/placas/rx-580-123"
+                   title="RX 580 8GB">RX 580 8GB</a>
+                <h3 class="olx-adcard__price font-semibold">R$ 449</h3>
+            </section>
+        """
+
+        items = scraper.parse_items(html, 5)
+
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].title, "RX 580 8GB")
+        self.assertEqual(items[0].price, "R$ 449")
+        self.assertEqual(items[0].price_value, 449.0)
+        self.assertEqual(
+            items[0].url,
+            "https://www.olx.com.br/informatica/placas/rx-580-123",
+        )
+
     def test_chrome_profile_cleanup_runs_only_once_per_start_cycle(self) -> None:
         factory = ChromeFactory()
 

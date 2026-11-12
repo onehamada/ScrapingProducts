@@ -3763,7 +3763,7 @@ class OLXScraper(BaseMarketplaceScraper):
 
         soup = make_soup(
             page_html,
-            parse_only=SoupStrainer("section", class_="olx-adcard"),
+            parse_only=SoupStrainer("section", class_=re.compile(r"\bolx-adcard\b")),
         )
         cards = soup.find_all("section", class_="olx-adcard")
         items: list[Listing] = []
