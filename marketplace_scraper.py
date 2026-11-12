@@ -2620,6 +2620,13 @@ class ArtifactStore:
         path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
         return f"/artifacts/json/{path.name}"
 
+    def save_error_report(self, query: str, report: dict[str, Any]) -> str:
+        stamp = time.strftime("%Y%m%d_%H%M%S")
+        filename = f"{stamp}_error-report_{slugify(query)[:80]}_{time.time_ns()}.json"
+        path = ARTIFACTS_JSON_DIR / filename
+        path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
+        return f"/artifacts/json/{path.name}"
+
 
 def clone_search_payload(payload: dict[str, Any]) -> dict[str, Any]:
     cloned = dict(payload)
@@ -2723,6 +2730,64 @@ class SearchCache:
         with self._lock:
             self._entries[key] = CacheEntry(created_at=now, payload=stored)
             self._purge(now)
+
+
+def build_error_report(
+    query: str,
+    platforms: list[str],
+    results: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    platform_reports: dict[str, dict[str, Any]] = {}
+    issues: list[dict[str, str]] = []
+    counts = {"ok": 0, "no_results": 0, "failed": 0}
+
+    for platform in platforms:
+        result = results.get(platform, {})
+        success = bool(result.get("success"))
+        count = int(result.get("count") or 0)
+        error = normalize_text(str(result.get("error") or ""))
+        note = normalize_text(str(result.get("note") or ""))
+        status = "failed" if not success else "no_results" if count == 0 else "ok"
+        counts[status] += 1
+
+        platform_reports[platform] = {
+            "status": status,
+            "success": success,
+            "count": count,
+            "scanned_count": int(result.get("scanned_count") or 0),
+            "error": error,
+            "note": note,
+            "search_url": result.get("search_url", ""),
+            "final_url": result.get("final_url", ""),
+            "page_title": result.get("page_title", ""),
+            "elapsed_ms": result.get("elapsed_ms", 0.0),
+            "cache_hit": bool(result.get("cache_hit", False)),
+            "search_attempts": result.get("search_attempts", []),
+        }
+
+        if status != "ok":
+            issues.append(
+                {
+                    "platform": platform,
+                    "severity": "error" if status == "failed" else "warning",
+                    "status": status,
+                    "message": error or note or "Nenhum anuncio retornado.",
+                }
+            )
+
+    return {
+        "report_type": "marketplace-search-error-report",
+        "created_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+        "query": query,
+        "platforms_requested": platforms,
+        "summary": {
+            "platforms": len(platforms),
+            **counts,
+            "issues": len(issues),
+        },
+        "issues": issues,
+        "results": platform_reports,
+    }
 
 
 class ChromeFactory:
@@ -5234,6 +5299,7 @@ class MarketplaceService:
         max_results: int = 10,
         headless: bool = False,
         category: str = "auto",
+        _generate_error_report: bool = True,
     ) -> dict[str, Any]:
         started = time.perf_counter()
         attempts: list[dict[str, Any]] = []
@@ -5277,6 +5343,9 @@ class MarketplaceService:
         )
         payload["elapsed_ms"] = round((time.perf_counter() - started) * 1000, 1)
         payload["json_snapshot"] = self.artifacts.save_json(payload["source"], query, payload)
+        if _generate_error_report:
+            report = build_error_report(query, [platform], {platform: payload})
+            payload["error_report"] = self.artifacts.save_error_report(query, report)
         return payload
 
     def search_many(
@@ -5300,6 +5369,7 @@ class MarketplaceService:
                 max_results=max_results,
                 headless=headless,
                 category=category,
+                _generate_error_report=False,
             )
         else:
             collected: dict[str, Any] = {}
@@ -5312,6 +5382,7 @@ class MarketplaceService:
                         max_results=max_results,
                         headless=headless,
                         category=category,
+                        _generate_error_report=False,
                     ): platform
                     for platform in platforms
                 }
@@ -5358,5 +5429,7 @@ class MarketplaceService:
             "elapsed_ms": round((time.perf_counter() - started) * 1000, 1),
             "parallel": len(platforms) > 1,
         }
+        error_report = build_error_report(query, platforms, results)
+        payload["error_report"] = self.artifacts.save_error_report(query, error_report)
         payload["json_snapshot"] = self.artifacts.save_json("combined", query, payload)
         return payload

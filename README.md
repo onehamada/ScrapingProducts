@@ -160,5 +160,6 @@ Exemplo de requisição para `POST /api/search`:
 - Algumas consultas exigem uma janela de navegador visível. O modo sem interface pode não funcionar em plataformas que solicitam verificação adicional.
 - O cache de consultas tem duração padrão de 120 segundos.
 - A busca múltipla executa as consultas em paralelo.
+- Cada pesquisa salva um relatório JSON com o resultado por plataforma, falhas e buscas sem anúncios. A interface mostra o link para abrir o relatório.
 - A gravação de snapshots HTML de consultas bem-sucedidas fica desativada por padrão; pode ser habilitada por `MARKETPLACE_SAVE_SUCCESS_HTML_SNAPSHOTS`.
 - Algumas plataformas podem apresentar captcha, autenticação ou mecanismos de proteção. O Facebook pode retornar anúncios públicos sem login; se exigir autenticação para uma busca, o perfil do navegador pode ser usado para entrar manualmente.

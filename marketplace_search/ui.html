@@ -2629,6 +2629,7 @@
           <div class="summary">
             ${selectedPlatforms}
             ${data.json_snapshot ? `<a class="summary-pill" href="${escapeHtml(data.json_snapshot)}" target="_blank" rel="noopener noreferrer">Dump JSON</a>` : ""}
+            ${data.error_report ? `<a class="summary-pill" href="${escapeHtml(data.error_report)}" target="_blank" rel="noopener noreferrer">Relatorio de erros</a>` : ""}
           </div>
         </div>
         ${marketInsightsTemplate(data.market_insights)}

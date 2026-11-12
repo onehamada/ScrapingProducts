@@ -1,10 +1,13 @@
 import json
+import tempfile
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 from marketplace_scraper import (
     AliExpressScraper,
     ArtifactStore,
+    build_error_report,
     build_market_insights,
     build_search_candidates,
     ChromeFactory,
@@ -36,6 +39,71 @@ class QueryMatchingTests(unittest.TestCase):
                 "facebook",
             ],
         )
+
+    def test_error_report_persists_each_platform_outcome(self) -> None:
+        results = {
+            "olx": {
+                "success": True,
+                "count": 2,
+                "scanned_count": 6,
+                "items": [],
+            },
+            "mercadolivre": {
+                "success": False,
+                "count": 0,
+                "error": "Verificacao de seguranca",
+                "items": [],
+            },
+            "facebook": {
+                "success": True,
+                "count": 0,
+                "note": "Nenhum anuncio retornado.",
+                "items": [],
+            },
+        }
+        report = build_error_report("rx 580", list(results), results)
+
+        self.assertEqual(
+            report["summary"],
+            {"platforms": 3, "ok": 1, "no_results": 1, "failed": 1, "issues": 2},
+        )
+        self.assertEqual(report["results"]["mercadolivre"]["status"], "failed")
+        self.assertEqual(report["results"]["facebook"]["status"], "no_results")
+        self.assertEqual(len(report["issues"]), 2)
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            with patch("marketplace_scraper.ARTIFACTS_JSON_DIR", Path(temp_dir)):
+                artifact_path = ArtifactStore().save_error_report("rx 580", report)
+            saved_report = json.loads(
+                (Path(temp_dir) / Path(artifact_path).name).read_text(encoding="utf-8")
+            )
+
+        self.assertEqual(saved_report, report)
+        self.assertTrue(artifact_path.startswith("/artifacts/json/"))
+
+    def test_search_many_generates_one_error_report_for_the_search(self) -> None:
+        service = MarketplaceService()
+        platform_result = {
+            "source": "olx",
+            "success": True,
+            "count": 0,
+            "items": [],
+            "error": "",
+            "note": "Nenhum item retornado.",
+        }
+
+        with (
+            patch.object(service, "search_platform", return_value=platform_result) as search_mock,
+            patch.object(service.artifacts, "save_error_report", return_value="/artifacts/json/report.json") as report_mock,
+            patch.object(service.artifacts, "save_json", return_value=""),
+        ):
+            payload = service.search_many("rx 580", ["olx"])
+
+        self.assertEqual(payload["error_report"], "/artifacts/json/report.json")
+        self.assertEqual(search_mock.call_count, 1)
+        self.assertFalse(search_mock.call_args.kwargs["_generate_error_report"])
+        self.assertEqual(report_mock.call_count, 1)
+        self.assertEqual(report_mock.call_args.args[1]["summary"]["no_results"], 1)
 
     def test_facebook_public_listing_does_not_require_login(self) -> None:
         scraper = FacebookMarketplaceScraper(ChromeFactory(), ArtifactStore())
