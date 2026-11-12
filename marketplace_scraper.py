@@ -3449,6 +3449,14 @@ class MercadoLivreScraper(BaseMarketplaceScraper):
         lowered = page_html.lower()
         if "hubo un error accediendo a esta pagina" in lowered:
             return "Mercado Livre devolveu uma pagina de erro."
+        if (
+            "/gz/account-verification" in current_url.lower()
+            or "suspicious-traffic-frontend" in lowered
+        ):
+            return (
+                "Mercado Livre exigiu verificacao de seguranca e nao carregou os anuncios. "
+                "Conclua qualquer verificacao manual no site e tente novamente mais tarde."
+            )
         return ""
 
     def parse_items(self, page_html: str, max_results: int) -> list[Listing]:

@@ -12,6 +12,7 @@ from marketplace_scraper import (
     evaluate_title_reason,
     FacebookMarketplaceScraper,
     Listing,
+    MercadoLivreScraper,
     MarketplaceService,
     OLXScraper,
     resolve_category,
@@ -49,6 +50,17 @@ class QueryMatchingTests(unittest.TestCase):
                 "https://www.facebook.com/marketplace/saopaulo/search/?query=rtx",
             )
         )
+
+    def test_mercadolivre_account_verification_is_reported_as_error(self) -> None:
+        scraper = MercadoLivreScraper(ChromeFactory(), ArtifactStore())
+
+        error = scraper.detect_error(
+            "Mercado Libre",
+            '<html><body><main class="suspicious-traffic-frontend"></main></body></html>',
+            "https://www.mercadolivre.com.br/gz/account-verification?go=%2Frx-580",
+        )
+
+        self.assertIn("verificacao de seguranca", error)
 
     def test_monitor_query_matches_titles_with_double_quote_inches(self) -> None:
         title = 'Monitor Gamer LG 24" Full HD, 100Hz, IPS, 5ms'
